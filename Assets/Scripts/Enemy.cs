@@ -6,12 +6,13 @@ using System.Linq;
 
 public class Enemy : MonoBehaviour
 {
-    public static event Action OnEnemyDeath; 
     private const float MOVING_FORCE = 15f;
     private Rigidbody rb;
     private List<Transform> targetTransform = new List<Transform>();
     private List<float> targetDistance = new List<float>();
     private bool isAlive = true;
+
+    public static event Action OnEnemyDeath;
 
     private void MoveTowardsTarget()
     {

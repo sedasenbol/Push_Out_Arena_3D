@@ -11,7 +11,7 @@ public class CameraFollow : MonoBehaviour
         player = GameObject.Find("Player");
     }
 
-    void Update()
+    private void Update()
     {
         if (player.transform.position.y > 0)
         {
