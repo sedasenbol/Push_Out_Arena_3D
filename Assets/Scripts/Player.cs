@@ -53,14 +53,14 @@ public class Player : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.green;
-        Vector3 begin = new Vector3(beginningDragPosition.x, 0f, beginningDragPosition.y);
+        Vector3 begin = new Vector3(beginningDragPosition.x, beginningDragPosition.y, cam.WorldToScreenPoint(transform.position).z);
         begin = cam.ScreenToWorldPoint(begin);
-        begin.y = cam.nearClipPlane;
-        Vector3 end = new Vector3(currentDragPosition.x, 0f, currentDragPosition.y);
+        
+        Vector3 end = new Vector3(currentDragPosition.x, currentDragPosition.y, cam.WorldToScreenPoint(transform.position).z);
         end = cam.ScreenToWorldPoint(end);
-        end.y = cam.nearClipPlane;
-        Gizmos.DrawLine(begin,end);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(begin, end);
     }
 
     private void Die()
