@@ -24,6 +24,20 @@ public class UIManager : MonoBehaviour
     public static event Action OnStartButtonClicked;
     public static event Action OnMenuButtonClicked;
 
+    public void MenuButtonClicked()
+    {
+        OnMenuButtonClicked?.Invoke();
+    }
+
+    public void StartButtonClicked()
+    {
+        OnStartButtonClicked?.Invoke();
+        gameTitle.gameObject.SetActive(false);
+        startButton.gameObject.SetActive(false);
+        levelText.gameObject.SetActive(true);
+        enemiesText.gameObject.SetActive(true);
+    }
+
     private void OnEnable()
     {
         GameManager.OnPlayerSuccess += LoadSuccessScreen;
@@ -62,20 +76,6 @@ public class UIManager : MonoBehaviour
     {
         levelText.text = "Level " + sceneIndex.ToString();
         UpdateRemainingEnemies(remainingEnemies);
-    }
-
-    public void MenuButtonClicked()
-    {
-        OnMenuButtonClicked?.Invoke();
-    }
-
-    public void StartButtonClicked()
-    {
-        OnStartButtonClicked?.Invoke();
-        gameTitle.gameObject.SetActive(false);
-        startButton.gameObject.SetActive(false);
-        levelText.gameObject.SetActive(true);
-        enemiesText.gameObject.SetActive(true);
     }
 
     private void UpdateRemainingEnemies(int remainingEnemies)
