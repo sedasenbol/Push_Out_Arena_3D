@@ -9,10 +9,10 @@ public class GameManager : MonoBehaviour
     private const int LAST_SCENE_INDEX = 2; 
     private GameState stateOfTheGame = new GameState();
 
-    public static event Action OnPlayerSuccess;
-    public static event Action OnLoadingNextLevel;
+    public static event Action<int> OnPlayerSuccess;
+    public static event Action<int, int> OnLoadingNextLevel;
     public static event Action OnPlayerGameOver;
-    public static event Action OnRemainingEnemiesUpdate;
+    public static event Action<int> OnRemainingEnemiesUpdate;
 
     private void OnEnable()
     {
@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
     {
         stateOfTheGame.RemainingEnemies--;
         stateOfTheGame.DeadEnemyCount++;
-        OnRemainingEnemiesUpdate?.Invoke();
+        OnRemainingEnemiesUpdate?.Invoke(stateOfTheGame.RemainingEnemies);
 
         if(stateOfTheGame.RemainingEnemies == 0 && stateOfTheGame.CurrentState == GameState.State.OnPlay)
         {
@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
             {
                 Time.timeScale = 0f;
                 stateOfTheGame.CurrentState = GameState.State.Success;
-                OnPlayerSuccess?.Invoke();
+                OnPlayerSuccess?.Invoke(stateOfTheGame.DeadEnemyCount);
             }
             else
             {
@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
                 SceneManager.LoadScene(currentSceneIndex + 1, LoadSceneMode.Additive);
                 stateOfTheGame.CurrentScene++;
                 stateOfTheGame.RemainingEnemies = 4;
-                OnLoadingNextLevel?.Invoke();
+                OnLoadingNextLevel?.Invoke(stateOfTheGame.RemainingEnemies, (int)stateOfTheGame.CurrentScene+1);
             }
         }
     }

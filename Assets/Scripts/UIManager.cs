@@ -21,8 +21,6 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private Text enemiesText;
 
-    private GameState stateOfTheGame;
-
     public static event Action OnStartButtonClicked;
     public static event Action OnMenuButtonClicked;
 
@@ -32,7 +30,6 @@ public class UIManager : MonoBehaviour
         GameManager.OnPlayerGameOver += LoadGameOverScreen;
         GameManager.OnRemainingEnemiesUpdate += UpdateRemainingEnemies;
         GameManager.OnLoadingNextLevel += ShowNextLevel;
-        GameManager.OnLoadingNextLevel += UpdateRemainingEnemies;
     }
 
     private void OnDisable()
@@ -41,12 +38,11 @@ public class UIManager : MonoBehaviour
         GameManager.OnPlayerGameOver -= LoadGameOverScreen;
         GameManager.OnRemainingEnemiesUpdate -= UpdateRemainingEnemies;
         GameManager.OnLoadingNextLevel -= ShowNextLevel;
-        GameManager.OnLoadingNextLevel -= UpdateRemainingEnemies;
     }
 
-    private void LoadSuccessScreen()
+    private void LoadSuccessScreen(int deadEnemyCount)
     {
-        successText.text = "Congratulations!" + System.Environment.NewLine + "You have defeated " + stateOfTheGame.DeadEnemyCount.ToString() + " enemies.";
+        successText.text = "Congratulations!" + System.Environment.NewLine + "You have defeated " + deadEnemyCount.ToString() + " enemies.";
 
         levelText.gameObject.SetActive(false);
         enemiesText.gameObject.SetActive(false);
@@ -62,9 +58,10 @@ public class UIManager : MonoBehaviour
         menuButton.gameObject.SetActive(true);
     }
 
-    private void ShowNextLevel()
+    private void ShowNextLevel(int remainingEnemies, int sceneIndex)
     {
-        levelText.text = "Level " + ((int)stateOfTheGame.CurrentScene + 1).ToString();
+        levelText.text = "Level " + sceneIndex.ToString();
+        UpdateRemainingEnemies(remainingEnemies);
     }
 
     public void MenuButtonClicked()
@@ -81,16 +78,14 @@ public class UIManager : MonoBehaviour
         enemiesText.gameObject.SetActive(true);
     }
 
-    private void UpdateRemainingEnemies()
+    private void UpdateRemainingEnemies(int remainingEnemies)
     {
-        enemiesText.text = "Remaining Enemies: " + stateOfTheGame.RemainingEnemies.ToString();
+        enemiesText.text = "Remaining Enemies: " + remainingEnemies.ToString();
     }
 
     private void Start()
     {
         gameTitle.gameObject.SetActive(true);
         startButton.gameObject.SetActive(true);
-
-        stateOfTheGame = FindObjectOfType<GameManager>().StateOfTheGame;
     }
 }
