@@ -42,6 +42,9 @@ public class Player : MonoBehaviour
 
     private void MoveWhileDragging(Vector2 position)
     {
+        
+        // I will send you a script with the ideal implementation of this behaviour. This is hard to control
+        // because you should be seeing the "virtual joystick" to properly control this. 
         if (isAlive)
         {
             currentDragPosition = position;

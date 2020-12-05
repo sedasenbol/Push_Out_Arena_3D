@@ -13,9 +13,10 @@ public class CameraFollow : MonoBehaviour
 
     private void Update()
     {
-        if (player.transform.position.y > 0)
+        if (player.transform.position.y > 0) // you never check whether the player is null or not. 
         {
-            transform.position = player.transform.position + new Vector3(0f, 9f, -30f);
+            // not caching the transform and player.transform is inefficient
+            transform.position = player.transform.position + new Vector3(0f, 9f, -30f); // this is a magic number. You should make this a parameter.
         }
     }
 }

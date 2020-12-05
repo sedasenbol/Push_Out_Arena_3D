@@ -8,14 +8,16 @@ public class Enemy : MonoBehaviour
 {
     private const float MOVING_FORCE = 15f;
     private Rigidbody rb;
-    private List<Transform> targetTransform = new List<Transform>();
-    private List<float> targetDistance = new List<float>();
+    private List<Transform> targetTransform = new List<Transform>(); // this should be called targetTransforms
+    private List<float> targetDistance = new List<float>(); // this should be plural too
     private bool isAlive = true;
 
     public static event Action OnEnemyDeath;
 
     private void MoveTowardsTarget()
     {
+        // adequate logic, but this results in deadlocks. (both enemies push each other equally.
+        // you could find something smarter. 
         Vector3 direction = targetTransform[CalculateMinimumDistanceIndex()].position - transform.position;
         direction = direction.normalized;
         rb.AddForce(direction * MOVING_FORCE, ForceMode.Force);
@@ -42,6 +44,9 @@ public class Enemy : MonoBehaviour
     {
         if (rb.position.y < 0.5f)
         {
+            
+            // you should clear targetTransform and targetDistance lists on death. References left here will result in leaks.
+            
             OnEnemyDeath?.Invoke();
             isAlive = false;
         }
@@ -73,11 +78,11 @@ public class Enemy : MonoBehaviour
         if (isAlive)
         {
             MoveTowardsTarget();
-            Die();
+            Die(); // this method should be called "CheckDeath" or smt.
         }
         else
         {
-            StopFalling();
+            StopFalling(); 
         }
     }
 }

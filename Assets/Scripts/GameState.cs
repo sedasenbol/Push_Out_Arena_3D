@@ -1,5 +1,10 @@
 ﻿public class GameState
 {
+    
+    // These enums could be at the end of this file
+    // because as a code reader I am not interested in possible states of those types, but 
+    // I am interested in fields that I can interact with. 
+    
     public enum State
     {
         Start,
