@@ -8,40 +8,43 @@ public class Enemy : MonoBehaviour
 {
     private const float MOVING_FORCE = 15f;
     private Rigidbody rb;
-    private List<Transform> targetTransform = new List<Transform>();
-    private List<float> targetDistance = new List<float>();
+    private List<Transform> targetTransforms = new List<Transform>();
+    private List<float> targetDistances = new List<float>();
     private bool isAlive = true;
 
     public static event Action OnEnemyDeath;
 
     private void MoveTowardsTarget()
     {
-        Vector3 direction = targetTransform[CalculateMinimumDistanceIndex()].position - transform.position;
+        Vector3 direction = targetTransforms[CalculateMinimumDistanceIndex()].position - transform.position;
         direction = direction.normalized;
-        rb.AddForce(direction * MOVING_FORCE, ForceMode.Force);
+        float forceRandomizer = UnityEngine.Random.Range(0.5f, 1.5f);
+        rb.AddForce(direction * MOVING_FORCE * forceRandomizer, ForceMode.Force);
     }
 
     private int CalculateMinimumDistanceIndex()
     {
-        targetDistance.Clear();
-        for (int i=0; i < targetTransform.Count; i++)
+        targetDistances.Clear();
+        for (int i=0; i < targetTransforms.Count; i++)
         {
-            if (targetTransform[i].position.y > 0.5f)
+            if (targetTransforms[i].position.y > 0.5f)
             {
-                targetDistance.Add((targetTransform[i].position - transform.position).sqrMagnitude);
+                targetDistances.Add((targetTransforms[i].position - transform.position).sqrMagnitude);
             }
             else
             {
-                targetDistance.Add(Mathf.Infinity);
+                targetDistances.Add(Mathf.Infinity);
             }
         }
-        return targetDistance.IndexOf(targetDistance.Min());
+        return targetDistances.IndexOf(targetDistances.Min());
     }
 
-    private void Die()
+    private void CheckIfEnemyIsDead()
     {
         if (rb.position.y < 0.5f)
         {
+            targetTransforms.Clear();
+            targetDistances.Clear();
             OnEnemyDeath?.Invoke();
             isAlive = false;
         }
@@ -58,12 +61,12 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        targetTransform.Add(GameObject.Find("Player").transform);
+        targetTransforms.Add(GameObject.Find("Player").transform);
         foreach (GameObject enemy in GameObject.FindGameObjectsWithTag("Enemy"))
         {
             if (enemy != this.gameObject)
             {
-                targetTransform.Add(enemy.transform);
+                targetTransforms.Add(enemy.transform);
             }
         }
     }
@@ -73,7 +76,7 @@ public class Enemy : MonoBehaviour
         if (isAlive)
         {
             MoveTowardsTarget();
-            Die();
+            CheckIfEnemyIsDead();
         }
         else
         {
