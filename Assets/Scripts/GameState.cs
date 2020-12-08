@@ -1,19 +1,5 @@
 ﻿public class GameState
 {
-    public enum State
-    {
-        Start,
-        OnPlay,
-        GameOver,
-        Success,
-    }
-    public enum Scene
-    {
-        Level1 = 0,
-        Level2 = 1,
-        Level3 = 2,
-        Level4 = 3,
-    }
     private bool isAlive = true;
     private int remainingEnemies = 4;
     private int deadEnemyCount = 0;
@@ -28,4 +14,18 @@
     public State CurrentState { get { return currentState; } set { currentState = value; } }
     public Scene CurrentScene { get { return currentScene; } set { currentScene = value; } }
 
+    public enum State
+    {
+        Start,
+        OnPlay,
+        GameOver,
+        Success,
+    }
+    public enum Scene
+    {
+        Level1 = 0,
+        Level2 = 1,
+        Level3 = 2,
+        Level4 = 3,
+    }
 }

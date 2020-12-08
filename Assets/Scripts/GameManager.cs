@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     private const int LAST_SCENE_INDEX = 2; 
-    private GameState stateOfTheGame = new GameState();
+    private readonly GameState stateOfTheGame = new GameState();
 
     public static event Action<int> OnPlayerSuccess;
     public static event Action<int, int> OnLoadingNextLevel;
@@ -38,13 +38,11 @@ public class GameManager : MonoBehaviour
 
     private void CheckIfGameIsOver()
     {
-        if (stateOfTheGame.CurrentState == GameState.State.OnPlay)
-        {
-            Time.timeScale = 0f;
-            stateOfTheGame.CurrentState = GameState.State.GameOver;
-            stateOfTheGame.IsAlive = false;
-            OnPlayerGameOver?.Invoke();
-        }
+        if (stateOfTheGame.CurrentState != GameState.State.OnPlay) { return; }
+        Time.timeScale = 0f;
+        stateOfTheGame.CurrentState = GameState.State.GameOver;
+        stateOfTheGame.IsAlive = false;
+        OnPlayerGameOver?.Invoke();
     }
 
     private void CountDeadEnemies()
